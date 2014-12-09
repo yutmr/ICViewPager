@@ -372,12 +372,15 @@
     
     if (activeContentIndex == self.activeContentIndex) {
         
-        [self.pageViewController setViewControllers:@[viewController]
-                                          direction:UIPageViewControllerNavigationDirectionForward
-                                           animated:NO
-                                         completion:^(BOOL completed) {
-                                             weakSelf.animatingToTab = NO;
-                                         }];
+        __block typeof(viewController) blockViewController = viewController;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.pageViewController setViewControllers:@[blockViewController]
+                                              direction:UIPageViewControllerNavigationDirectionForward
+                                               animated:NO
+                                             completion:^(BOOL completed) {
+                                                 weakSelf.animatingToTab = NO;
+                                             }];
+        });
         
     } else if (!(activeContentIndex + 1 == self.activeContentIndex || activeContentIndex - 1 == self.activeContentIndex)) {
         
