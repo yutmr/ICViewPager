@@ -371,7 +371,12 @@
     __weak ViewPagerController *weakSelf = self;
     
     if (activeContentIndex == self.activeContentIndex) {
-        
+        // Do not set view controller with `animated:NO` while animating
+        // For fix http://bit.ly/1Mv50rL
+        if (self.isAnimatingToTab) {
+            return;
+        }
+
         [self.pageViewController setViewControllers:@[viewController]
                                           direction:UIPageViewControllerNavigationDirectionForward
                                            animated:NO
